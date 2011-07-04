@@ -20,7 +20,6 @@ var Proto = {
      * "this" is the prototype of the new instance.
      */
     new: function () {
-        // Alternative: new this.constructor(). But: cannot forward "arguments".
         var instance = Object.create(this);
         if (instance.constructor) {
             instance.constructor.apply(this, arguments);
@@ -35,14 +34,20 @@ var Proto = {
         // We cannot set the prototype of "subProps"
         // => copy its contents to a new object that has the right prototype
         var subProto = Object.create(this, Object.getOwnPropertyDescriptors(subProps));
-
-        // Ensure that constructor and prototype point to each other
-        if (subProto.constructor) {
-            subProto.constructor.prototype = subProto;
-        }
         subProto.super = this; // for super-calls
         return subProto;
     },
+};
+
+/**
+ * Optional: compatibility with constructor functions
+ */
+Function.prototype.extend = function(subProps) {
+    // Let a prototype-as-class extend a constructor function CF.
+    // Step 1: append Proto to CF.prototype
+    var protoAsClass = Proto.extend.call(this.prototype, Proto);
+    // Step 2: the new object is a prototype-as-class => use as such
+    return protoAsClass.extend(subProps);
 };
 
 ////////// Demo //////////
