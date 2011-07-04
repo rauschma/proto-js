@@ -9,20 +9,32 @@ if (!Object.getOwnPropertyDescriptors) {
     };
 }
 
+/**
+ * The root of all classes that adhere to "the prototypes as classes" protocol.
+ * The neat thing is that the class methods "new" and "extend" are automatically
+ * inherited by subclasses of this class (because Proto is in their prototype chain).
+ */
 var Proto = {
+    /**
+     * Class method: create a new instance and let instance method constructor() initialize it.
+     * "this" is the prototype of the new instance.
+     */
     new: function () {
-        // new this.constructor() does not let us hand in the arguments
-        // => we have to simulate it
+        // Alternative: new this.constructor(). But: cannot forward "arguments".
         var instance = Object.create(this);
         if (instance.constructor) {
             instance.constructor.apply(this, arguments);
         }
         return instance;
     },
-    extend: function (props) {
-        // We cannot set the prototype of "properties"
-        // => copy them to a new object that has the right prototype
-        var subProto = Object.create(this, Object.getOwnPropertyDescriptors(props));
+    
+    /**
+     * Class method: subclass "this" (a prototype object used as a class)
+     */
+    extend: function (subProps) {
+        // We cannot set the prototype of "subProps"
+        // => copy its contents to a new object that has the right prototype
+        var subProto = Object.create(this, Object.getOwnPropertyDescriptors(subProps));
 
         // Ensure that constructor and prototype point to each other
         if (subProto.constructor) {
