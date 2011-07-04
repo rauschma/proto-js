@@ -3,9 +3,11 @@
 // To be part of ECMAScript.next
 if (!Object.getOwnPropertyDescriptors) {
     Object.getOwnPropertyDescriptors = function (obj) {
-        return Object.getOwnPropertyNames(obj).map(function(propName) {
-            return Object.getOwnPropertyDescriptor(source, propName);
+        var descs = {};
+        Object.getOwnPropertyNames(obj).forEach(function(propName) {
+            descs[propName] = Object.getOwnPropertyDescriptor(obj, propName);
         });
+        return descs;
     };
 }
 
@@ -22,7 +24,7 @@ var Proto = {
     new: function () {
         var instance = Object.create(this);
         if (instance.constructor) {
-            instance.constructor.apply(this, arguments);
+            instance.constructor.apply(instance, arguments);
         }
         return instance;
     },
@@ -52,7 +54,7 @@ Function.prototype.extend = function(subProps) {
 
 ////////// Demo //////////
 
-/***** Code *****
+//***** Code *****
 // Superclass
 var Person = Proto.extend({
     constructor: function (name) {
@@ -73,7 +75,7 @@ var Worker = Person.extend({
         return Worker.super.describe.call(this)+" ("+this.title+")";
     },
 });
-*/
+//*/
 
 /***** Interaction *****
 var jane = Worker.new("Jane", "CTO"); // normally: new Worker(...)
