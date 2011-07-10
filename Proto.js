@@ -45,11 +45,12 @@ var Proto = {
  * Optional: compatibility with constructor functions
  */
 Function.prototype.extend = function(subProps) {
-    // Let a prototype-as-class extend a constructor function CF.
-    // Step 1: append Proto to CF.prototype
-    var protoAsClass = Proto.extend.call(this.prototype, Proto);
-    // Step 2: the new object is a prototype-as-class => use as such
-    return protoAsClass.extend(subProps);
+    var constrFunc = this;
+    // Let a prototype-as-class extend a constructor function constrFunc.
+    // Step 1: tmpClass is Proto, but as a sub-prototype of constrFunc.prototype
+    var tmpClass = Proto.extend.call(constrFunc.prototype, Proto);
+    // Step 2: tmpClass is a prototype-as-class => use as such
+    return tmpClass.extend(subProps);
 };
 
 ////////// Demo //////////
