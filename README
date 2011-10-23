@@ -16,21 +16,21 @@ Code:
     });
 
     // Subclass
-    var Worker = Person.extend({
+    var Employee = Person.extend({
         constructor: function (name, title) {
-            Worker.super.constructor.call(this, name);
+            Employee.super.constructor.call(this, name);
             this.title = title;
         },
         describe: function () {
-            return Worker.super.describe.call(this)+" ("+this.title+")";
+            return Employee.super.describe.call(this)+" ("+this.title+")";
         }
     });
 
 Interaction:
 
-    var jane = Worker.new("Jane", "CTO"); // normally: new Worker(...)
+    var jane = Employee.new("Jane", "CTO"); // normally: new Employee(...)
 
-    > Worker.isPrototypeOf(jane) // normally: jane instanceof Worker
+    > Employee.isPrototypeOf(jane) // normally: jane instanceof Employee
     true
 
     > jane.describe()
